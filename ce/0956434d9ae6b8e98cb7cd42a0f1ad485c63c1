@@ -1,0 +1,38 @@
+.github/workflows/validate.yml
+  s_90f54d78c37f48::t_0c1f81c22d8d77 1-30
+reconciler/cli.py
+  s_90f54d78c37f48::t_4ae9654d4719df 3-15
+  s_90f54d78c37f48::t_0cac9abdf065c6 170-172,177-178,197-203,207-209,211,213-215
+  s_90f54d78c37f48::t_5b261770db6817 38-61
+reconciler/bundles.py
+  s_90f54d78c37f48::t_6fc8c6266fd7ec 35-37,41-43
+  s_90f54d78c37f48::t_6bc61a304b7aff 27-34,38-40
+  s_90f54d78c37f48::t_2bbf0793fb0bc1 80-85,87-91
+  s_90f54d78c37f48::t_9e465b5e6c4f5f 73-77,86,92-142
+.github/workflows/drift.yml
+  s_90f54d78c37f48::t_743996d8bb8044 17-21
+.github/workflows/plan.yml
+  s_90f54d78c37f48::t_35a961645ce623 15-19
+tests/test_reconciler.py
+  s_90f54d78c37f48::t_da61038e2198fa 137-148,163-187
+  s_90f54d78c37f48::t_1a6718eb882de5 149-162
+README.md
+  s_90f54d78c37f48::t_0ec084e9b181be 101-109,116-118
+  s_90f54d78c37f48::t_ac8fa4fc60e545 51-54,61-63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "ce0956434d9ae6b8e98cb7cd42a0f1ad485c63c1",
+  "prompts": {},
+  "sessions": {
+    "s_90f54d78c37f48": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a9155ef2-f2f6-4ff6-9d55-dca13ef385bb",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Kevin Moses <kevin@semgrep.com>"
+    }
+  }
+}
