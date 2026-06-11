@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+# Never commit a token. Use the SEMGREP_API_TOKEN environment variable.
+.env
+*.token

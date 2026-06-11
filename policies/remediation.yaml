@@ -1,0 +1,31 @@
+# Remediation policies — what happens when a finding matches.
+#
+# Each policy is a filter (conditions over finding attributes) plus actions.
+# `slug` is the stable identity: omit it on a new policy to derive it from
+# the name, and never change it afterward (renaming `name` keeps `slug`).
+#
+# Read GET .../vocab?product=remediation for the accepted condition types,
+# action types, and value enums. Note that `block` requires a companion
+# `pr_comment` action in the same policy.
+policies:
+  - name: Block high-confidence criticals
+    active: true
+    filters:
+      mode: all
+      conditions:
+        - type: severity
+          values: [critical, high]
+        - type: confidence
+          values: [high]
+    actions:
+      - type: block
+      - type: pr_comment
+  - name: Comment on medium findings
+    active: true
+    filters:
+      mode: all
+      conditions:
+        - type: severity
+          values: [medium]
+    actions:
+      - type: pr_comment

@@ -1,0 +1,22 @@
+# Semgrep Code detection policy — which rules run on which projects.
+#
+# This is the desired state. `python -m reconciler.cli apply` makes the live
+# deployment match it; anything not listed here is removed on apply.
+rulesets:
+  - p/default
+  - p/comment
+rules: []
+# Rules from the selected rulesets to turn off deployment-wide.
+disabled:
+  - python.lang.security.audit.exec-detected.exec-detected
+# Per-project / per-tag carve-outs. exception_type is `exclude` (skip the
+# rule on the target) or `include` (force it on). Target exactly one of
+# `project` (a repository name) or `project_tag_name` (a project tag) — the
+# reference must already exist in your deployment, or the apply is rejected
+# with UNKNOWN_REFERENCE. Example (uncomment and use a real tag/rule):
+#
+#   - exception_type: exclude
+#     project_tag_name: my-noisy-subsidiary
+#     rule: python.flask.security.injection.path-traversal-open.path-traversal-open
+#     rule_type: rule
+exceptions: []
