@@ -1,0 +1,24 @@
+.github/workflows/drift.yml
+  s_90f54d78c37f48::t_5934ee0e85f3dc 1-32
+.github/workflows/apply.yml
+  s_90f54d78c37f48::t_69475cbf4a3302 1-4
+README.md
+  s_90f54d78c37f48::t_6e77834196e927 7-8
+  s_90f54d78c37f48::t_457cd51746cfbc 97-104
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "9004331c5d70133ff01994c1020994f311783d4e",
+  "prompts": {},
+  "sessions": {
+    "s_90f54d78c37f48": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a9155ef2-f2f6-4ff6-9d55-dca13ef385bb",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Kevin Moses <kevin@semgrep.com>"
+    }
+  }
+}
