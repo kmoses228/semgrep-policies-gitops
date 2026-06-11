@@ -4,7 +4,8 @@ A worked example of managing [Semgrep](https://semgrep.dev) detection and
 remediation policies with GitOps, using the **Policies V2 API**. Your policy
 state lives in this repo as YAML; a reconciler reads it, previews the diff,
 and strictly applies it to your deployment. Pull requests are gated on the
-diff, and a nightly job catches changes made out of band in the UI.
+diff, a merge to `main` applies immediately, and a nightly read-only check
+flags changes made out of band in the UI.
 
 This is a reference implementation — fork it, point it at your deployment,
 and adapt the policy files. It has no dependency on Semgrep internals; it
@@ -93,9 +94,14 @@ The workflows expect two repository settings:
   Actions secret; it is never read from the repo.
 - **Variable** `SEMGREP_DEPLOYMENT_ID` — your numeric deployment id.
 
-`plan.yml` runs on pull requests touching `policies/`; `apply.yml` runs on
-merge to `main`, nightly, and on demand. Every action is pinned to a full
-commit SHA.
+- `plan.yml` runs on pull requests touching `policies/` — review the diff
+  before merge.
+- `apply.yml` runs on every merge to `main` (and on demand): a merge writes
+  to the deployment immediately. This is the only path that writes.
+- `drift.yml` runs nightly (and on demand), read-only: it flags policies
+  changed in the UI out of band, but never writes.
+
+Every action is pinned to a full commit SHA.
 
 ## Requirements
 

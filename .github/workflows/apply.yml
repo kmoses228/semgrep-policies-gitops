@@ -1,4 +1,7 @@
-# Apply on merge to main, and nightly to catch out-of-band UI changes.
+# Apply as soon as a change merges to main. The repo is the source of
+# truth, so a merge is the only event that should write to the deployment;
+# drift detection runs separately and read-only (see drift.yml).
+#
 # The reconciler reads a fresh state_version before each PUT, so a change
 # made in the Semgrep UI between merge and apply surfaces as a conflict
 # rather than being silently overwritten.
@@ -10,9 +13,6 @@ on:
     paths:
       - "policies/**"
       - "reconciler/**"
-  schedule:
-    # Nightly reconciliation (07:00 UTC).
-    - cron: "0 7 * * *"
   workflow_dispatch:
 
 permissions:
