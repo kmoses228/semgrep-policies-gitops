@@ -1,0 +1,33 @@
+reconciler/cli.py
+  s_90f54d78c37f48::t_7a5675d11efda8 156-164,172
+  s_90f54d78c37f48::t_14fede07d2d45e 75
+  s_90f54d78c37f48::t_721b6c8f7d1d5c 99-109
+.github/workflows/apply.yml
+  s_90f54d78c37f48::t_52010881dbfef4 41-42
+tests/test_reconciler.py
+  s_90f54d78c37f48::t_f91e62ed9f1758 13-14,22-27
+  s_90f54d78c37f48::t_4fdfe176662427 102-137,140-154
+  s_90f54d78c37f48::t_70fa18b0baaeb0 138-139
+.github/workflows/drift.yml
+  s_90f54d78c37f48::t_6ca766953eda1a 31-34
+.github/workflows/plan.yml
+  s_90f54d78c37f48::t_a7b574e2dead82 34-37
+README.md
+  s_90f54d78c37f48::t_4b8578ae385d53 97-101,104-106
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "8bf958ba447a1ccbab39398f6c8e84fd4afe4208",
+  "prompts": {},
+  "sessions": {
+    "s_90f54d78c37f48": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a9155ef2-f2f6-4ff6-9d55-dca13ef385bb",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Kevin Moses <kevin@semgrep.com>"
+    }
+  }
+}
