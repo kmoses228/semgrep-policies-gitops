@@ -94,12 +94,16 @@ The workflows expect two repository settings:
   Actions secret; it is never read from the repo.
 - **Variable** `SEMGREP_DEPLOYMENT_ID` — your numeric deployment id.
 
-- `plan.yml` runs on pull requests touching `policies/` — review the diff
-  before merge.
+- `plan.yml` runs on pull requests touching `policies/` — it dry-runs the
+  PR's policies and prints the diff for the reviewer. A pending diff is the
+  change under review, so it passes; only an **invalid** bundle (a
+  validation error like an unknown rule or `block` without `pr_comment`)
+  fails the check.
 - `apply.yml` runs on every merge to `main` (and on demand): a merge writes
   to the deployment immediately. This is the only path that writes.
-- `drift.yml` runs nightly (and on demand), read-only: it flags policies
-  changed in the UI out of band, but never writes.
+- `drift.yml` runs nightly (and on demand), read-only: it runs
+  `plan --fail-on-diff`, so it fails if the live state has been changed in
+  the UI out of band — but it never writes.
 
 Every action is pinned to a full commit SHA.
 

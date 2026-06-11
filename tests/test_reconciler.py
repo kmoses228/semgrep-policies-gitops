@@ -10,12 +10,21 @@ from __future__ import annotations
 import pytest
 import responses
 
+from reconciler import bundles
+from reconciler import cli
 from reconciler.client import PoliciesApiError
 from reconciler.client import PoliciesClient
 
 _BASE = "https://example.test"
 _DEPLOYMENT = 524
 _PREFIX = f"{_BASE}/api/policies/v2/deployments/{_DEPLOYMENT}"
+
+_EMPTY_DIFF = {"creates": [], "updates": [], "deletes": []}
+_PENDING_DIFF = {
+    "creates": [{"kind": "RemediationPolicy", "key": {"slug": "new-policy"}}],
+    "updates": [],
+    "deletes": [],
+}
 
 
 def _client() -> PoliciesClient:
@@ -90,3 +99,56 @@ def test_missing_token_is_a_clear_error(monkeypatch):
     monkeypatch.delenv("SEMGREP_API_TOKEN", raising=False)
     with pytest.raises(RuntimeError, match="SEMGREP_API_TOKEN"):
         PoliciesClient(_DEPLOYMENT, base_url=_BASE)
+
+
+def _stub_plan_responses(remediation_diff):
+    """Stub the three dry-runs cmd_plan issues against the demo policies."""
+    responses.post(f"{_PREFIX}/detection-policy/code:dryRun", json=_EMPTY_DIFF)
+    responses.post(
+        f"{_PREFIX}/detection-policy/secrets:dryRun",
+        status=404,
+        json={"code": "PRODUCT_NOT_ENABLED"},
+    )
+    responses.post(
+        f"{_PREFIX}/remediation-policies:dryRun", json=remediation_diff
+    )
+
+
+@responses.activate
+def test_plan_passes_on_clean_state():
+    _stub_plan_responses(_EMPTY_DIFF)
+    assert cli.cmd_plan(_client()) == 0
+
+
+@responses.activate
+def test_plan_with_pending_diff_passes_by_default():
+    # On a PR, a pending diff is the change under review, not a failure.
+    _stub_plan_responses(_PENDING_DIFF)
+    assert cli.cmd_plan(_client()) == 0
+
+
+@responses.activate
+def test_plan_with_pending_diff_fails_when_gating_on_drift():
+    # The nightly drift check passes --fail-on-diff.
+    _stub_plan_responses(_PENDING_DIFF)
+    assert cli.cmd_plan(_client(), fail_on_diff=True) == 1
+
+
+@responses.activate
+def test_plan_main_returns_2_on_invalid_bundle(monkeypatch):
+    monkeypatch.setenv("SEMGREP_API_TOKEN", "fake-token")
+    responses.post(f"{_PREFIX}/detection-policy/code:dryRun", json=_EMPTY_DIFF)
+    responses.post(
+        f"{_PREFIX}/detection-policy/secrets:dryRun",
+        status=404,
+        json={"code": "PRODUCT_NOT_ENABLED"},
+    )
+    responses.post(
+        f"{_PREFIX}/remediation-policies:dryRun",
+        status=400,
+        json={"code": "MISSING_DEPENDENT_ACTION", "missing_companion": "pr_comment"},
+    )
+    exit_code = cli.main(
+        ["plan", "--deployment-id", str(_DEPLOYMENT), "--base-url", _BASE]
+    )
+    assert exit_code == 2

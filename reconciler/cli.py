@@ -72,7 +72,7 @@ def cmd_export(client: PoliciesClient) -> int:
     return 0
 
 
-def cmd_plan(client: PoliciesClient) -> int:
+def cmd_plan(client: PoliciesClient, *, fail_on_diff: bool = False) -> int:
     changed = False
     for path, product in _DETECTION_TARGETS:
         raw = bundles.read_yaml(path)
@@ -96,11 +96,17 @@ def cmd_plan(client: PoliciesClient) -> int:
         )
         changed |= _print_remediation_diff(diff)
 
-    if changed:
-        print("\nplan: changes pending")
-        return 1
-    print("plan: live state matches this repo")
-    return 0
+    if not changed:
+        print("plan: live state matches this repo")
+        return 0
+
+    # A pending diff is normal on a PR — it is exactly what the reviewer is
+    # there to approve. Only fail when asked to gate on drift (the nightly
+    # drift check), so that a valid PR is not red just for proposing a
+    # change. Invalid candidates never reach here: the dry run raises a
+    # PoliciesApiError, which main() reports as a hard failure.
+    print("\nplan: changes pending")
+    return 1 if fail_on_diff else 0
 
 
 def cmd_apply(client: PoliciesClient) -> int:
@@ -147,6 +153,15 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="API base URL (defaults to SEMGREP_APP_URL or https://semgrep.dev)",
     )
+    parser.add_argument(
+        "--fail-on-diff",
+        action="store_true",
+        help=(
+            "make `plan` exit non-zero when the live state differs from this "
+            "repo. Use for drift detection; leave off for PR review, where a "
+            "pending diff is expected."
+        ),
+    )
     args = parser.parse_args(argv)
 
     client = PoliciesClient(args.deployment_id, base_url=args.base_url)
@@ -154,7 +169,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "export":
             return cmd_export(client)
         if args.command == "plan":
-            return cmd_plan(client)
+            return cmd_plan(client, fail_on_diff=args.fail_on_diff)
         return cmd_apply(client)
     except PoliciesApiError as err:
         print(f"error: {err}", file=sys.stderr)

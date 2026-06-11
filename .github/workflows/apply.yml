@@ -38,4 +38,6 @@ jobs:
         env:
           SEMGREP_API_TOKEN: ${{ secrets.SEMGREP_API_TOKEN }}
           SEMGREP_DEPLOYMENT_ID: ${{ vars.SEMGREP_DEPLOYMENT_ID }}
+          # Defaults to https://semgrep.dev when the variable is unset.
+          SEMGREP_APP_URL: ${{ vars.SEMGREP_APP_URL }}
         run: uv run python -m reconciler.cli apply --deployment-id "$SEMGREP_DEPLOYMENT_ID"
