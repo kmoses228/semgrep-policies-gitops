@@ -1,0 +1,21 @@
+README.md
+  s_90f54d78c37f48::t_0fbc7924527b4f 103-106,111-113
+.github/workflows/test.yml
+  s_90f54d78c37f48::t_8146ceb7ca13fc 1-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "63f36880ee3e6773cd096884b5bc87f291448730",
+  "prompts": {},
+  "sessions": {
+    "s_90f54d78c37f48": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a9155ef2-f2f6-4ff6-9d55-dca13ef385bb",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Kevin Moses <kevin@semgrep.com>"
+    }
+  }
+}
