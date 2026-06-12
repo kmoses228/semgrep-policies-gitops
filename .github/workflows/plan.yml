@@ -8,6 +8,9 @@ on:
     paths:
       - "policies/**"
       - "reconciler/**"
+      # Also run when CI itself changes, so a workflow-only PR can satisfy
+      # the required `plan` check rather than blocking on an absent run.
+      - ".github/workflows/**"
 
 permissions:
   contents: read
