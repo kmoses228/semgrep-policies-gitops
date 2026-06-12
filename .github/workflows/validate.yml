@@ -9,6 +9,7 @@ on:
     paths:
       - "policies/**"
       - "reconciler/**"
+      - ".github/workflows/**"
   push:
     branches: [main]
 
